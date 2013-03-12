@@ -1,0 +1,50 @@
+unit Unit2;
+
+interface
+       function f(x: real): real;
+       function proizv(x, toch: real): real;
+       procedure secut(var x: real; var it: byte; toch, gra, grb: real);
+       procedure casat(var x: real; var it: byte; toch, gra, grb: real);
+implementation
+
+function f(x: real): real;
+begin
+  f:=exp(1/3*ln(0.07))+2*x+arctan(sqrt(x));
+end;
+
+function proizv(x, toch: real): real;
+begin
+  proizv:=(f(x+toch/2)-f(x-toch/2))/toch;
+end;
+
+procedure secut(var x: real; var it: byte; toch, gra, grb: real);
+var fl: boolean;
+begin
+  fl:=true;
+  it:=0;
+  while fl and (it<50) do
+    begin
+    inc(it);
+    x:=(gra+grb)/2;
+    if f(x)*f(grb) > 0 then grb:=x else gra:=x;
+    if abs(grb-gra)<toch then fl:=false;
+    end;
+  x:=(gra+grb)/2
+end;
+
+procedure casat(var x: real; var it: byte; toch, gra, grb: real);
+var x2: real; fl: boolean;
+begin
+  fl:=true;
+  it:=0;
+  x:=(gra+grb)/2;
+  while fl and (it<50) do
+    begin
+    inc(it);
+    x2:=x-f(x)/proizv(x, toch);
+    if abs(x2-x) < toch then fl:=false;
+    x:=x2;
+    end;
+end;
+
+end.
